@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#Script escrito para rodar no Ubuntu Server
+
 # CONFIGURAÇÃO
 BACKEND_REPO="https://github.com/devti-star/RH_SO-backend.git"
 FRONTEND_REPO="https://github.com/devti-star/RH_SO-frontend.git"
@@ -40,7 +42,13 @@ cd "$BACKEND_DIR" || exit
 echo "Instalando dependências do backend..."
 npm install
 
-npm run start:dev >> "../$LOG_FILE_BACK" 
+echo "DB_HOST = 172.18.2.83
+DB_USERNAME = dirti
+DB_PASSWORD = \"pmtl#2025@ti\"
+DB_PORT = 5433
+DB_DATABASE = rh_sodb" >> .env
+
+nohup npm run start:dev > "../$LOG_FILE_BACK" 2>&1 &
 
 cd ..
 
@@ -52,8 +60,9 @@ cd "$FRONTEND_DIR" || exit
 echo "Instalando dependências do frontend..."
 npm install
 
-echo "Inicializando frontend com PM2..."
-npm run dev & >> "../$LOG_FILE_FRONT"
+echo "VITE_BASE_URL=http://localhost:3000" >> .env
+
+npm run dev > "../$LOG_FILE_FRONT" 2>&1 &
 
 cd ..
 
